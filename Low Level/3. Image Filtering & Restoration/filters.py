@@ -24,7 +24,15 @@ win_name = 'Camera Filters'
 cv2.namedWindow(win_name, cv2.WINDOW_NORMAL)
 result = None
 
-source = cv2.VideoCapture(s)
+try:
+    source = cv2.VideoCapture(s)
+    if not source.isOpened():
+        raise IOError("Error: Could not open video source.")
+except Exception as e:
+    print(f"Error: {e}")
+    print("Please check your camera connection or provide a valid video file path.")
+    sys.exit(1)
+
 
 while alive:
     has_frame, frame = source.read()
@@ -70,5 +78,6 @@ while alive:
     elif key == ord('P') or key == ord('p'):
         image_filter = PREVIEW
 
+cv2.waitKey(0)
 source.release()
 cv2.destroyWindow(win_name)
